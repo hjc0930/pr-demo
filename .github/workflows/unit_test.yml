@@ -13,6 +13,12 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.number || github.sha }}
   cancel-in-progress: true
 
+# 给bot配置最小必要权限（确保能给PR发评论、上报检查状态）
+permissions:
+  checks: write # 上报CI检查状态权限
+  pull-requests: write # PR评论、修改状态权限
+  contents: read # 拉取仓库代码权限
+
 jobs:
   build:
     name: Unit Test (${{ matrix.node-name }})
@@ -44,3 +50,21 @@ jobs:
 
       - name: Run unit test
         run: npm run test:coverage
+
+         # 核心新增：让 github-actions[bot] 自动发布覆盖率报告评论
+      - name: 📊 Report coverage to PR (by github-actions[bot])
+        uses: davelosert/vitest-coverage-report-action@v2.2.0
+        with:
+          # 仅聚焦本次PR变更的文件（避免全量覆盖率干扰）
+          only-changed-files: true
+          # 自定义评论标题，更直观
+          comment-title: '📈 本次PR测试覆盖率报告（${{ matrix.node-name }} Node ${ matrix.node-version })'
+          # 覆盖率阈值（按需调整，低于则该步骤失败）
+          # coverage-threshold-lines: 80
+          # coverage-threshold-branches: 70
+          # 隐藏不必要的列，简化评论
+          hide-coverage-columns: 'statements'
+          # 开启调试（排查问题时用，日常可关闭）
+          debug: false
+        # 即使测试失败，也尝试生成覆盖率报告（方便排查问题）
+        if: always()
