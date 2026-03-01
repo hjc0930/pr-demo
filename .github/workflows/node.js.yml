@@ -1,0 +1,29 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Pull Request Check
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  main-pr-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # 获取完整提交历史（方便后续做代码变更分析）
+          
+      - name: Setup NodeJS environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm' # 缓存 npm 依赖，加速后续构建
+
+      - name: Install dependences
+        run: npm ci
+
+      - name: Run unit test
+        run: npm run test
