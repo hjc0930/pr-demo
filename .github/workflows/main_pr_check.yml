@@ -8,7 +8,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  main-pr-check:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: checkout code
