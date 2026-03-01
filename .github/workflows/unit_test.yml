@@ -54,7 +54,7 @@ jobs:
 
           # 核心新增：让 github-actions[bot] 自动发布覆盖率报告评论
       - name: 📊 Report coverage to PR (by github-actions[bot])
-        uses: davelosert/vitest-coverage-report-action@v3.1.0
+        uses: davelosert/vitest-coverage-report-action@v2
         with:
           # 仅聚焦本次PR变更的文件（避免全量覆盖率干扰）
           only-changed-files: true
