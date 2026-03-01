@@ -1,26 +1,43 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 
-name: Pull Request Check
+name: 🧪 Unit Test
 
 on:
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
+
+# 并发控制：同一 PR 只跑最新的 CI，自动取消旧的
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || github.sha }}
+  cancel-in-progress: true
 
 jobs:
   build:
+    name: Unit Test (${{ matrix.node-name }})
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20, 22, 24]
+        include:
+          - node-version: 20
+            node-name: LTS
+          - node-version: 22
+            node-name: Current
+          - node-version: 24
+            node-name: New
+    
     steps:
       - name: checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # 获取完整提交历史（方便后续做代码变更分析）
           
-      - name: Setup NodeJS environment
+      - name: Setup NodeJS
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          cache: 'npm' # 缓存 npm 依赖，加速后续构建
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
 
       - name: Install dependences
         run: npm ci
