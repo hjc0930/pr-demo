@@ -1,5 +1,5 @@
 import { it, expect } from "vitest";
-import { add, subtract, multiply, divide } from "./index";
+import { add, subtract, multiply, divide } from "../index";
 
 it("should add two numbers", () => {
   expect(add(1, 2)).toBe(3);
