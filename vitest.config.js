@@ -8,7 +8,7 @@ export default defineConfig({
       include: ["src/**/*.js"],
       exclude: ["src/**/*.spec.js"],
       provider: "v8",
-      reporter: ["text", "html"],
+      reporter: ["text", "json-summary", "json"],
       thresholds: {
         statements: 80,
         branches: 70,
