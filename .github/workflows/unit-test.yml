@@ -45,8 +45,3 @@ jobs:
       - name: Run unit test
         run:
           npm run test
-
-          # 核心新增：让 github-actions[bot] 自动发布覆盖率报告评论
-      # - name: Report Coverage
-      #   uses: davelosert/vitest-coverage-report-action@v2
-      #   if: always()
