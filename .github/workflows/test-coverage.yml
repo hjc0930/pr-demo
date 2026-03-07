@@ -3,10 +3,15 @@
 name: 🧪 Test Coverage
 
 on:
-  pull_request:
+  pull_request_target:
     branches: ["main"]
   workflow_dispatch:
 
+permissions:
+  checks: write # 上报CI检查状态权限
+  pull-requests: write # PR评论、修改状态权限
+  contents: read # 拉取仓库代码权限
+ 
 jobs:
   build:
     name: Coverage
