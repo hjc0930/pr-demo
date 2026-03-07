@@ -13,12 +13,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.number || github.sha }}
   cancel-in-progress: true
 
-# 给bot配置最小必要权限（确保能给PR发评论、上报检查状态）
-permissions:
-  checks: write # 上报CI检查状态权限
-  pull-requests: write # PR评论、修改状态权限
-  contents: read # 拉取仓库代码权限
-
 jobs:
   build:
     name: Unit Test (${{ matrix.node-name }})
@@ -50,9 +44,9 @@ jobs:
 
       - name: Run unit test
         run:
-          npm run test:coverage
+          npm run test
 
           # 核心新增：让 github-actions[bot] 自动发布覆盖率报告评论
-      - name: Report Coverage
-        uses: davelosert/vitest-coverage-report-action@v2
-        if: always()
+      # - name: Report Coverage
+      #   uses: davelosert/vitest-coverage-report-action@v2
+      #   if: always()
