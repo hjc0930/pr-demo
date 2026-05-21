@@ -1,0 +1,40 @@
+# Unit Test Coverage Report
+
+name: 🧪 Test Coverage
+
+on:
+  pull_request_target:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  checks: write # 上报CI检查状态权限
+  pull-requests: write # PR评论、修改状态权限
+  contents: read # 拉取仓库代码权限
+ 
+jobs:
+  build:
+    name: Coverage
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: 'Run Test Coverage'
+        run: npm run test:coverage
+
+      - uses: davelosert/vitest-coverage-report-action@v2.2.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          file-coverage-mode: changes
